@@ -1,7 +1,7 @@
 
 // import { createTransaction, createSolanaClient } from "gill";
 import { loadKeypairSignerFromFile } from "gill/node";
-import { getAddMemoInstruction, getAssociatedTokenAccountAddress, getCreateNativeMintInstruction, getCreateTokenInstructions, getMintTokensInstructions, getTokenMetadataAddress } from "gill/programs";
+import { getAddMemoInstruction, getAssociatedTokenAccountAddress, getCreateNativeMintInstruction, getCreateTokenInstructions, getMintTokensInstructions, getTokenMetadataAddress, getTransferTokensInstructions } from "gill/programs";
 import {
     createTransaction,
     createSolanaClient,
@@ -23,7 +23,7 @@ const { rpc, sendAndConfirmTransaction } = createSolanaClient({
 const { value: latestBlockhash } = await rpc.getLatestBlockhash().send();
 // const mint = await generateKeyPairSigner()
 const mint = address("6QRY8Stw4VzgGSLeTavBNAcpVNHV2ArFnpg7GKQx5vrL");
-const destination = address("DWyWmTCLqfLAzfeiaDZmxVa2Y8qWaehYyHsiFtpPNfND");
+const destination = address("FPJxDLuqUpUQY222ALtuoB8e2HpbVjGYxizCUDKXC32z");
 // const instructions = getCreateTokenInstructions(
 //     {
 //         decimals: 6,
@@ -45,17 +45,27 @@ const mintInstrction = getMintTokensInstructions({
     mint,
     feePayer: signer,
     mintAuthority: signer,
-    destination: destination,
+    destination: address("DWyWmTCLqfLAzfeiaDZmxVa2Y8qWaehYyHsiFtpPNfND"),
     ata: await getAssociatedTokenAccountAddress(mint, destination),
     amount: 100_000_000_000_000
+})
+
+const transferInstruction = getTransferTokensInstructions({
+    feePayer: signer,
+    mint: mint,
+    authority: signer,
+    sourceAta: await getAssociatedTokenAccountAddress(mint, signer),
+    destination: destination,
+    destinationAta: await getAssociatedTokenAccountAddress(mint, destination),
+    amount: 1_000_000_000_000
 })
 
 const transaction = createTransaction({
     version: "legacy", // or `0` if using address lookup tables
     feePayer: signer,
     instructions: [
-        ...mintInstrction, // the array from getMintTokensInstructions
-        getAddMemoInstruction({ memo: "100M token minted" }),
+        ...transferInstruction, // the array from getMintTokensInstructions
+        getAddMemoInstruction({ memo: "1M token sent" }),
     ],
     latestBlockhash,
     // computeUnitLimit, // optional, but highly5 recommend to set
