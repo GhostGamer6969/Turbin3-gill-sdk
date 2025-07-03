@@ -8,9 +8,12 @@
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "index": "npx tsx ./index.ts"
+    "index": "npx tsx ./index.ts",
+    "cryptix": "npx tsx ./cryptix.ts"
   },
   "dependencies": {
+    "@codama/cli": "^1.1.2",
+    "bs58": "^6.0.0",
     "gill": "^0.10.2"
   },
   "devDependencies": {
