@@ -9,12 +9,19 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "index": "npx tsx ./index.ts",
-    "cryptix": "npx tsx ./cryptix.ts"
+    "cryptix": "npx tsx ./cryptix.ts",
+    "nft_image": "npx tsx ./nft_image.ts",
+    "nft_metadata": "npx tsx ./nft_metadata.ts",
+    "nft_mint": "npx tsx ./nft_mint.ts"
   },
   "dependencies": {
     "@codama/cli": "^1.1.2",
+    "@metaplex-foundation/umi-bundle-defaults": "^1.2.0",
+    "@metaplex-foundation/umi-uploader-irys": "^0.9.2",
     "bs58": "^6.0.0",
-    "gill": "^0.10.2"
+    "fs": "^0.0.1-security",
+    "gill": "^0.10.2",
+    "metaplex": "^0.0.1-security"
   },
   "devDependencies": {
     "@types/node": "^24.0.10",
