@@ -1,7 +1,7 @@
-import { createTransaction, getMinimumBalanceForRentExemption, KeyPairSigner, generateKeyPairSigner, createSolanaClient, getExplorerLink, getSignatureFromTransaction } from "gill";
-import { getInitializeMintInstruction, getMintSize, TOKEN_2022_PROGRAM_ADDRESS, TOKEN_PROGRAM_ADDRESS } from "gill/programs/token";
+import { createTransaction, getMinimumBalanceForRentExemption, KeyPairSigner, generateKeyPairSigner, createSolanaClient, getExplorerLink, getSignatureFromTransaction, address } from "gill";
+import { AssociatedTokenInstruction, getAssociatedTokenAccountAddress, getInitializeMintInstruction, getMintSize, getMintToInstruction, TOKEN_2022_PROGRAM_ADDRESS, TOKEN_PROGRAM_ADDRESS } from "gill/programs/token";
 import { loadKeypairSignerFromFile } from "gill/node";
-import { getCreateMetadataAccountV3Instruction, getCreateAccountInstruction, getTokenMetadataAddress } from "gill/programs";
+import { getCreateMetadataAccountV3Instruction, getCreateAccountInstruction, getTokenMetadataAddress, getMintTokensInstructions } from "gill/programs";
 
 const { rpc, sendAndConfirmTransaction } = createSolanaClient({
     urlOrMoniker: "devnet", // `mainnet`, `localnet`, etc
@@ -45,7 +45,7 @@ const transaction = createTransaction({
         ),
         getCreateMetadataAccountV3Instruction({
             collectionDetails: null,
-            isMutable: false,
+            isMutable: true,
             updateAuthority: signer,
             mint: mint.address,
             metadata: metadataAddress,
@@ -56,10 +56,18 @@ const transaction = createTransaction({
                 collection: null,
                 creators: null,
                 uses: null,
-                name: "Johnny",
-                symbol: "JOHNNY",
+                name: "JohnnyRuggg",
+                symbol: "JRUG",
                 uri: "https://devnet.irys.xyz/J5kWZBBSfv5sZAMFH2VSUzb8yYsN65enTYSouYxtjF8q",
             },
+        }),
+        ...getMintTokensInstructions({
+            mint: mint,
+            feePayer: signer,
+            mintAuthority: signer,
+            destination: signer.address,
+            ata: await getAssociatedTokenAccountAddress(mint, signer.address),
+            amount: 1
         }),
     ],
     latestBlockhash,
