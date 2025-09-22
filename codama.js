@@ -1,6 +1,7 @@
-import { createCodamaConfig } from "gill";
+import { createCodamaConfig } from 'gill'
 
 export default createCodamaConfig({
-    idl: "./idl.json",
-    clientJs: "clients/js/src/generated",
-});
+    clientJs: 'clients/js/src/generated',
+    clientRust: 'clients/rs/src/generated',
+    idl: './idl.json',
+})
